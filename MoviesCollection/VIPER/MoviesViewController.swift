@@ -18,8 +18,8 @@ final class MoviesViewController: UIViewController, ViewProtocol {
     private lazy var collection: UICollectionView = {
         let collection = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.backgroundColor = .green
-        collection.register(MoviesCell.self, forCellWithReuseIdentifier: "cell")
+        collection.backgroundColor = Constants.appColor
+        collection.register(MoviesCell.self, forCellWithReuseIdentifier: Constants.cellID)
         return collection
     }()
     private let layout = UICollectionViewFlowLayout()
@@ -38,7 +38,7 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         collection.delegate = self
         collection.dataSource = self
         view.addSubview(collection)
-        navigationItem.title = "Popular Movies"
+        navigationItem.title = Constants.appTitle
         
         presenter.viewDidLoad()
     }
@@ -56,7 +56,7 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collection.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MoviesCell
+        let cell = collection.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as! MoviesCell
         DispatchQueue.global().async {
             let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
             DispatchQueue.main.async {
@@ -79,6 +79,12 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 vc.movieDesc.text = viewModel.description
                 self.navigationController?.pushViewController(vc, animated: true)
             }
+        }
+    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lastElement = presenter.moviesCollection.count - 1
+        if indexPath.row == lastElement {
+            presenter.viewDidLoad()
         }
     }
 }

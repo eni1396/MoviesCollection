@@ -17,16 +17,20 @@ final class MoviesInteractor: MoviesInteractorProtocol {
     
     weak var presenter: MoviesPresenterProtocol?
     private let apiManager: ApiManager
+    private var pageCounter = 1
     
     init(apiManager: ApiManager = ApiManager()) {
         self.apiManager = apiManager
     }
     
     func getMovies() {
-        apiManager.fetch(page: 1) { [weak self] (result: MoviesViewModel) in
+        apiManager.fetch(page: pageCounter) { [weak self] (result: MoviesViewModel) in
             guard let self = self else { return }
-            self.presenter?.moviesCollection = result.results
+            self.presenter?.moviesCollection += result.results
             self.presenter?.getMoviesFromInteractor()
+            if self.pageCounter <= 500 {
+                self.pageCounter += 1
+            }
         }
     }
 }

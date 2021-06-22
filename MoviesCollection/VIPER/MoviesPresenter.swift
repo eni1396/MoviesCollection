@@ -29,7 +29,6 @@ final class MoviesPresenter: MoviesPresenterProtocol {
     }
     
     func viewDidLoad() {
-          print("Presenter is being notified that the View was loaded.")
         interactor.getMovies()
       }
     
@@ -38,11 +37,11 @@ final class MoviesPresenter: MoviesPresenterProtocol {
     }
     
     func setupMovieModel(indexPath: IndexPath) -> MovieModel {
-        let path = "https://image.tmdb.org/t/p/original" + moviesCollection[indexPath.row].backdrop_path
-        return MovieModel(title: moviesCollection[indexPath.row].title,
+        let path = Constants.imageString + (moviesCollection[indexPath.row].backdropPath ?? "")
+        return MovieModel(title: moviesCollection[indexPath.row].title ?? "",
                           image: path,
                           description: moviesCollection[indexPath.row].overview,
-                          releaseDate: moviesCollection[indexPath.row].release_date,
-                          userRating: moviesCollection[indexPath.row].vote_average)
+                          releaseDate: moviesCollection[indexPath.row].releaseDate ?? "",
+                          userRating: moviesCollection[indexPath.row].voteAverage)
     }
 }

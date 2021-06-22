@@ -8,9 +8,9 @@
 import Foundation
 
 final class ApiManager {
-    private let path = "https://api.themoviedb.org/3/movie/popular?api_key=3952b33c810a5ad9a1889b306f34924b"
 
     func fetch<T: Codable>(page: Int, completion: @escaping (T) -> ()) {
+            let path = "https://api.themoviedb.org/3/movie/popular?api_key=3952b33c810a5ad9a1889b306f34924b&page=\(page)"
             guard let url = URL(string: path) else { return }
             URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else { return }

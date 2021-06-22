@@ -11,7 +11,7 @@ class MoviesCell: UICollectionViewCell {
     
     let textLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.italicSystemFont(ofSize: 23)
+        label.font = UIFont.italicSystemFont(ofSize: 18)
         label.numberOfLines = 0
         label.textAlignment = .center
        return label
@@ -43,12 +43,12 @@ class MoviesCell: UICollectionViewCell {
         
         imageView.snp.makeConstraints { maker in
             maker.leading.trailing.top.equalToSuperview()
-            maker.height.equalTo(self.contentView.frame.size.height * 0.85)
+            maker.height.equalToSuperview().multipliedBy(0.85)
         }
         textLabel.snp.makeConstraints { maker in
             maker.leading.trailing.equalToSuperview()
             maker.top.equalTo(imageView.snp.bottom).offset(1)
-            maker.height.equalTo(self.contentView.frame.size.height * 0.14)
+            maker.height.equalToSuperview().multipliedBy(0.14)
         }
     }
     
