@@ -11,13 +11,13 @@ final class MoviesBuilder {
   
     static func build() -> MoviesViewController {
         let interactor = MoviesInteractor()
-//        let router = MoviesRouter()
-//        let presenter = MoviesPresenter(interactor: interactor, router: router)
-        let viewController = MoviesViewController()
+        let router = MoviesRouter()
+        let presenter = MoviesPresenter(interactor: interactor, router: router)
+        let viewController = MoviesViewController(presenter: presenter)
         
-//        router.viewController = viewController
-//        presenter.view = viewController
-//        interactor.presenter = presenter
+        router.viewController = viewController
+        presenter.view = viewController
+        interactor.presenter = presenter
         
         return viewController
     }

@@ -11,6 +11,6 @@ protocol MoviesRouterProtocol {
     
 }
 
-final class NewsFeedRouter: MoviesRouterProtocol {
+final class MoviesRouter: MoviesRouterProtocol {
      var viewController = UIViewController()
 }

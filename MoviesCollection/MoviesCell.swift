@@ -11,19 +11,46 @@ class MoviesCell: UICollectionViewCell {
     
     let textLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.italicSystemFont(ofSize: 23)
+        label.numberOfLines = 0
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
        return label
+    }()
+    let imageView: CachedImageView = {
+       let view = CachedImageView()
+        view.clipsToBounds = true
+        view.contentMode = .scaleToFill
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupView()
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        textLabel.text = nil
+        imageView.image = nil
+    }
+    
+    private func setupView() {
+        [textLabel, imageView].forEach { addSubview($0) }
+        imageView.layer.cornerRadius = imageView.frame.width / 2
         
-        backgroundColor = .blue
-        self.addSubview(textLabel)
+        imageView.snp.makeConstraints { maker in
+            maker.leading.trailing.top.equalToSuperview()
+            maker.height.equalTo(self.contentView.frame.size.height * 0.85)
+        }
         textLabel.snp.makeConstraints { maker in
-            maker.leading.trailing.equalToSuperview().offset(20)
-            maker.top.equalTo(self.contentView.snp.top).inset(20)
-            //maker.width.height.equalTo(60)
+            maker.leading.trailing.equalToSuperview()
+            maker.top.equalTo(imageView.snp.bottom).offset(1)
+            maker.height.equalTo(self.contentView.frame.size.height * 0.14)
         }
     }
     

@@ -7,12 +7,15 @@
 
 import SnapKit
 
-protocol ViewProtocol {
+protocol ViewProtocol: AnyObject {
+    var movies: [Result] { get set }
     
+    func getMoviesFromPresenter()
 }
 
 final class MoviesViewController: UIViewController, ViewProtocol {
     
+    private let presenter: MoviesPresenterProtocol
     private lazy var collection: UICollectionView = {
         let collection = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false
@@ -22,8 +25,11 @@ final class MoviesViewController: UIViewController, ViewProtocol {
     }()
     private let layout = UICollectionViewFlowLayout()
     
+    var movies = [Result]()
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    
+    init(presenter: MoviesPresenterProtocol) {
+        self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -36,17 +42,29 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         collection.delegate = self
         collection.dataSource = self
         view.addSubview(collection)
+        
+        presenter.viewDidLoad()
+    }
+    
+    func getMoviesFromPresenter() {
+        DispatchQueue.global().async {
+            self.movies = self.presenter.moviesCollection
+        DispatchQueue.main.async {
+            self.collection.reloadData()
+        }
+        }
     }
 }
 
 extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        10
+        presenter.moviesCollection.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collection.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MoviesCell
-        cell.textLabel.text = "kek"
+        cell.imageView.downloadImageFrom(withUrl:"https://image.tmdb.org/t/p/original" + movies[indexPath.row].backdrop_path)
+        cell.textLabel.text = movies[indexPath.row].title
         return cell
     }
 }
@@ -57,7 +75,7 @@ extension MoviesViewController: UICollectionViewDelegateFlowLayout {
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.estimatedItemSize = .zero
         }
-        let itemsPerRow: CGFloat = 2
+        let itemsPerRow: CGFloat = 1
         let totalSpaceBetweenItems = 20 * (itemsPerRow + 1)
         let availableWidth = collectionView.frame.width - totalSpaceBetweenItems
         let widthPerItem = availableWidth / itemsPerRow
