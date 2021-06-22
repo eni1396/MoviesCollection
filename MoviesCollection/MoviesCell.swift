@@ -14,14 +14,12 @@ class MoviesCell: UICollectionViewCell {
         label.font = UIFont.italicSystemFont(ofSize: 23)
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
        return label
     }()
     let imageView: CachedImageView = {
        let view = CachedImageView()
         view.clipsToBounds = true
-        view.contentMode = .scaleToFill
-        view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentMode = .scaleAspectFill
         return view
     }()
     

@@ -8,7 +8,6 @@
 import SnapKit
 
 protocol ViewProtocol: AnyObject {
-    var movies: [Result] { get set }
     
     func getMoviesFromPresenter()
 }
@@ -25,14 +24,11 @@ final class MoviesViewController: UIViewController, ViewProtocol {
     }()
     private let layout = UICollectionViewFlowLayout()
     
-    var movies = [Result]()
-    
-    
     init(presenter: MoviesPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,16 +38,14 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         collection.delegate = self
         collection.dataSource = self
         view.addSubview(collection)
+        navigationItem.title = "Popular Movies"
         
         presenter.viewDidLoad()
     }
     
     func getMoviesFromPresenter() {
-        DispatchQueue.global().async {
-            self.movies = self.presenter.moviesCollection
         DispatchQueue.main.async {
             self.collection.reloadData()
-        }
         }
     }
 }
@@ -63,9 +57,29 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collection.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MoviesCell
-        cell.imageView.downloadImageFrom(withUrl:"https://image.tmdb.org/t/p/original" + movies[indexPath.row].backdrop_path)
-        cell.textLabel.text = movies[indexPath.row].title
+        DispatchQueue.global().async {
+            let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
+            DispatchQueue.main.async {
+                cell.imageView.downloadImageFrom(withUrl: viewModel.image)
+                cell.textLabel.text = viewModel.title
+            }
+        }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = CurrentMovieViewController()
+        DispatchQueue.global().async {
+            let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
+            DispatchQueue.main.async {
+                vc.navigationItem.title = viewModel.title
+                vc.movieTitle.text = viewModel.title
+                vc.movieRating.label.text = "\(viewModel.userRating)"
+                vc.movieImage.downloadImageFrom(withUrl: viewModel.image)
+                vc.movieDesc.text = viewModel.description
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
     }
 }
 
