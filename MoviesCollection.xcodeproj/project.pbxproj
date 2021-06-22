@@ -115,6 +115,17 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
+		CE01CAE9268263A2007E87CB /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CE01CAE426825F0C007E87CB /* Constants.swift */,
+				CE336B372680E9060057E01C /* SceneDelegate.swift */,
+				CE336B352680E9060057E01C /* AppDelegate.swift */,
+				CE336B402680E90A0057E01C /* LaunchScreen.storyboard */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		CE336B292680E9060057E01C = {
 			isa = PBXGroup;
 			children = (
@@ -139,12 +150,9 @@
 				CE01CAE12682553C007E87CB /* API */,
 				CE01CAE826826080007E87CB /* CustomViews */,
 				CE336B4926813BA00057E01C /* VIPER */,
-				CE336B352680E9060057E01C /* AppDelegate.swift */,
-				CE336B372680E9060057E01C /* SceneDelegate.swift */,
+				CE01CAE9268263A2007E87CB /* Helpers */,
 				CE336B3E2680E90A0057E01C /* Assets.xcassets */,
-				CE336B402680E90A0057E01C /* LaunchScreen.storyboard */,
 				CE336B432680E90A0057E01C /* Info.plist */,
-				CE01CAE426825F0C007E87CB /* Constants.swift */,
 			);
 			path = MoviesCollection;
 			sourceTree = "<group>";
