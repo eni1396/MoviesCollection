@@ -6,9 +6,11 @@
 //
 
 import SnapKit
+import SDWebImage
 
 class MoviesCell: UICollectionViewCell {
     
+    // UI setup
     let textLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.italicSystemFont(ofSize: 18)
@@ -16,8 +18,8 @@ class MoviesCell: UICollectionViewCell {
         label.textAlignment = .center
        return label
     }()
-    let imageView: CachedImageView = {
-       let view = CachedImageView()
+    let imageView: UIImageView = {
+       let view = UIImageView()
         view.clipsToBounds = true
         view.contentMode = .scaleAspectFill
         return view
@@ -34,7 +36,7 @@ class MoviesCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         textLabel.text = nil
-        imageView.image = nil
+        imageView.sd_cancelCurrentImageLoad()
     }
     
     private func setupView() {

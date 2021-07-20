@@ -6,6 +6,7 @@
 //
 
 import SnapKit
+import SDWebImage
 
 protocol ViewProtocol: AnyObject {
     
@@ -15,6 +16,7 @@ protocol ViewProtocol: AnyObject {
 final class MoviesViewController: UIViewController, ViewProtocol {
     
     private let presenter: MoviesPresenterProtocol
+    
     private lazy var collection: UICollectionView = {
         let collection = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false
@@ -60,7 +62,9 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
         DispatchQueue.global().async {
             let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
             DispatchQueue.main.async {
-                cell.imageView.downloadImageFrom(withUrl: viewModel.image)
+                cell.imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                cell.imageView.sd_imageIndicator = SDWebImageActivityIndicator.large
+                cell.imageView.sd_setImage(with: viewModel.imageURL, completed: nil)
                 cell.textLabel.text = viewModel.title
             }
         }
@@ -72,11 +76,7 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
         DispatchQueue.global().async {
             let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
             DispatchQueue.main.async {
-                vc.navigationItem.title = viewModel.title
-                vc.movieTitle.text = viewModel.title
-                vc.movieRating.label.text = "\(viewModel.userRating)"
-                vc.movieImage.downloadImageFrom(withUrl: viewModel.image)
-                vc.movieDesc.text = viewModel.description
+                vc.configureView(with: viewModel)
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }

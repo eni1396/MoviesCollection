@@ -7,10 +7,18 @@
 
 import Foundation
 
-struct MovieModel {
-    var title: String = ""
-    var image: String = ""
-    var description: String = ""
-    var releaseDate: String = ""
-    var userRating: Double = 0
+protocol MovieProtocol {
+    var title: String { get set }
+    var imageURL: URL? { get set }
+    var description: String { get set }
+    var releaseDate: String { get set }
+    var userRating: Double { get set }
+}
+
+struct MovieModel: MovieProtocol {
+    var title: String
+    var imageURL: URL?
+    var description: String
+    var releaseDate: String
+    var userRating: Double
 }

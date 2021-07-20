@@ -12,7 +12,7 @@ protocol MoviesPresenterProtocol: AnyObject {
     
     func viewDidLoad()
     func getMoviesFromInteractor()
-    func setupMovieModel(indexPath: IndexPath) -> MovieModel
+    func setupMovieModel(indexPath: IndexPath) -> MovieProtocol
 }
 
 final class MoviesPresenter: MoviesPresenterProtocol {
@@ -36,10 +36,11 @@ final class MoviesPresenter: MoviesPresenterProtocol {
         view?.getMoviesFromPresenter()
     }
     
-    func setupMovieModel(indexPath: IndexPath) -> MovieModel {
+    func setupMovieModel(indexPath: IndexPath) -> MovieProtocol {
         let path = Constants.imageString + (moviesCollection[indexPath.row].backdropPath ?? "")
+        let url = URL(string: path)
         return MovieModel(title: moviesCollection[indexPath.row].title ?? "",
-                          image: path,
+                          imageURL: url,
                           description: moviesCollection[indexPath.row].overview,
                           releaseDate: moviesCollection[indexPath.row].releaseDate ?? "",
                           userRating: moviesCollection[indexPath.row].voteAverage)
