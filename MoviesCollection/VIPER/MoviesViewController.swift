@@ -10,7 +10,7 @@ import SDWebImage
 
 protocol ViewProtocol: AnyObject {
     
-    func getMoviesFromPresenter()
+    func getMoviesFromPresenter(viewModel: [Result])
 }
 
 final class MoviesViewController: UIViewController, ViewProtocol {
@@ -25,6 +25,7 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         return collection
     }()
     private let layout = UICollectionViewFlowLayout()
+    private var viewModel = [Result]()
     
     init(presenter: MoviesPresenterProtocol) {
         self.presenter = presenter
@@ -41,11 +42,15 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         collection.dataSource = self
         view.addSubview(collection)
         navigationItem.title = Constants.appTitle
-        
+        // view is ready to receive data from network
         presenter.viewDidLoad()
     }
     
-    func getMoviesFromPresenter() {
+    // Method to refresh view after interactor has loaded new data
+    func getMoviesFromPresenter(viewModel: [Result]) {
+        DispatchQueue.global().async {
+            self.viewModel = viewModel
+        }
         DispatchQueue.main.async {
             self.collection.reloadData()
         }
@@ -57,30 +62,18 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
         presenter.moviesCollection.count
     }
     
+    //Passing data to MoviesCell via SDImageView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collection.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as! MoviesCell
-        DispatchQueue.global().async {
-            let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
-            DispatchQueue.main.async {
-                cell.imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                cell.imageView.sd_imageIndicator = SDWebImageActivityIndicator.large
-                cell.imageView.sd_setImage(with: viewModel.imageURL, completed: nil)
-                cell.textLabel.text = viewModel.title
-            }
-        }
+        cell.configureView(with: self.viewModel, at: indexPath)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = CurrentMovieViewController()
-        DispatchQueue.global().async {
-            let viewModel = self.presenter.setupMovieModel(indexPath: indexPath)
-            DispatchQueue.main.async {
-                vc.configureView(with: viewModel)
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-        }
+        presenter.openVC(with: navigationController!, viewModel: viewModel, indexPath: indexPath)
     }
+    
+    // After reaching the end of array, ask interactor to load more data - prefetching
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let lastElement = presenter.moviesCollection.count - 1
         if indexPath.row == lastElement {
@@ -90,6 +83,8 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
 }
 
 extension MoviesViewController: UICollectionViewDelegateFlowLayout {
+    
+    // Methods to setup CollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {

@@ -39,16 +39,20 @@ class CurrentMovieViewController: UIViewController {
         view.backgroundColor = Constants.appColor
         setupView()
     }
-    // passing info to ui
-    func configureView(with viewModel: MovieProtocol) {
-        navigationItem.title = viewModel.title
-        movieTitle.text = viewModel.title
-        movieRating.label.text = "\(viewModel.userRating)"
-        movieImage.sd_setImage(with: viewModel.imageURL, completed: nil)
-        movieDesc.text = viewModel.description
+    // Passing info to ui
+    func configureView(with viewModel: [Result], at indexPath: IndexPath) {
+        
+        let path = Constants.imageString + (viewModel[indexPath.row].backdropPath ?? "")
+        let url = URL(string: path)
+        
+        navigationItem.title = viewModel[indexPath.row].title
+        movieTitle.text = viewModel[indexPath.row].title
+        movieRating.label.text = "\(viewModel[indexPath.row].voteAverage)"
+        movieImage.sd_setImage(with: url, completed: nil)
+        movieDesc.text = viewModel[indexPath.row].overview
     }
     
-    // constraints setup
+    // Constraints setup
     private func setupView() {
         
         [movieTitle, movieImage, movieDesc, movieRating].forEach {

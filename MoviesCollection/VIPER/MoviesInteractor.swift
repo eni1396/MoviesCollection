@@ -14,7 +14,6 @@ protocol MoviesInteractorProtocol {
 
 final class MoviesInteractor: MoviesInteractorProtocol {
     
-    
     weak var presenter: MoviesPresenterProtocol?
     private let apiManager: ApiManager
     private var pageCounter = 1
@@ -22,7 +21,7 @@ final class MoviesInteractor: MoviesInteractorProtocol {
     init(apiManager: ApiManager = ApiManager()) {
         self.apiManager = apiManager
     }
-    
+    // Fetching data from network
     func getMovies() {
         apiManager.fetch(page: pageCounter) { [weak self] (result: MoviesViewModel) in
             guard let self = self else { return }

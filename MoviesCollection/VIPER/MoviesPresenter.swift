@@ -12,7 +12,7 @@ protocol MoviesPresenterProtocol: AnyObject {
     
     func viewDidLoad()
     func getMoviesFromInteractor()
-    func setupMovieModel(indexPath: IndexPath) -> MovieProtocol
+    func openVC(with navigationController: UINavigationController, viewModel: [Result], indexPath: IndexPath) 
 }
 
 final class MoviesPresenter: MoviesPresenterProtocol {
@@ -28,21 +28,27 @@ final class MoviesPresenter: MoviesPresenterProtocol {
         self.router = router
     }
     
+    // call for interactor to start loading data
     func viewDidLoad() {
         interactor.getMovies()
       }
-    
+    // call from interactor to prepare data for UI
     func getMoviesFromInteractor() {
-        view?.getMoviesFromPresenter()
+        view?.getMoviesFromPresenter(viewModel: moviesCollection)
     }
     
-    func setupMovieModel(indexPath: IndexPath) -> MovieProtocol {
-        let path = Constants.imageString + (moviesCollection[indexPath.row].backdropPath ?? "")
-        let url = URL(string: path)
-        return MovieModel(title: moviesCollection[indexPath.row].title ?? "",
-                          imageURL: url,
-                          description: moviesCollection[indexPath.row].overview,
-                          releaseDate: moviesCollection[indexPath.row].releaseDate ?? "",
-                          userRating: moviesCollection[indexPath.row].voteAverage)
+    // Passing data to MovieModel
+//    func setupMovieModel(indexPath: IndexPath) -> MovieProtocol {
+//        let path = Constants.imageString + (moviesCollection[indexPath.row].backdropPath ?? "")
+//        let url = URL(string: path)
+//        return MovieModel(title: moviesCollection[indexPath.row].title ?? "",
+//                          imageURL: url,
+//                          description: moviesCollection[indexPath.row].overview,
+//                          releaseDate: moviesCollection[indexPath.row].releaseDate ?? "",
+//                          userRating: moviesCollection[indexPath.row].voteAverage)
+//    }
+    
+    func openVC(with navigationController: UINavigationController, viewModel: [Result], indexPath: IndexPath) {
+        router.openDetailVC(navigationController: navigationController, viewModel: moviesCollection, indexPath: indexPath)
     }
 }
