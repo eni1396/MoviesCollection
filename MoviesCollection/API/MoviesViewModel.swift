@@ -11,7 +11,6 @@ struct MoviesViewModel: Codable {
     let page: Int
     let results: [Result]
     let total_pages, total_results: Int
-
 }
 
 // MARK: - Result
@@ -26,8 +25,8 @@ struct Result: Codable {
     let video: Bool
     let voteAverage: Double
     let voteCount: Int
-
-private enum CodingKeys: String, CodingKey {
+    
+    private enum CodingKeys: String, CodingKey {
         case adult
         case backdropPath = "backdrop_path"
         case genreIDS = "genre_ids"

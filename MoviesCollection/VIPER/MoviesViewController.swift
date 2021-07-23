@@ -31,7 +31,7 @@ final class MoviesViewController: UIViewController, ViewProtocol {
     }()
     private let layout = UICollectionViewFlowLayout()
     
-    private var viewModel = [Result]()
+    private var movies = [Result]()
     
     init(presenter: MoviesPresenterProtocol) {
         self.presenter = presenter
@@ -56,7 +56,7 @@ final class MoviesViewController: UIViewController, ViewProtocol {
     
     // Method to refresh view after interactor has loaded new data
     func getMoviesFromPresenter(viewModel: [Result]) {
-        self.viewModel = viewModel
+        movies = viewModel
         DispatchQueue.main.async {
             self.collection.reloadData()
             self.refreshControl.endRefreshing()
@@ -77,12 +77,12 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
     //Passing data to MoviesCell via SDImageView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collection.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as? MoviesCell else { return UICollectionViewCell() }
-        cell.configureView(with: self.viewModel, at: indexPath)
+        cell.configureView(with: self.movies, at: indexPath)
         return cell
     }
     //Open vc on cell tap
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.openVC(with: navigationController!, viewModel: viewModel, indexPath: indexPath)
+        presenter.openVC(with: navigationController!, viewModel: movies, indexPath: indexPath)
     }
     
     // After reaching the end of array, ask interactor to load more data - prefetching

@@ -8,7 +8,7 @@
 import Foundation
 
 final class MoviesBuilder {
-  
+    
     static func build() -> MoviesViewController {
         let interactor = MoviesInteractor()
         let router = MoviesRouter()

@@ -18,7 +18,7 @@ protocol MoviesPresenterProtocol: AnyObject {
 }
 
 final class MoviesPresenter: MoviesPresenterProtocol {
-
+    
     var moviesCollection = [Result]()
     var isLoading = false
     
@@ -34,7 +34,7 @@ final class MoviesPresenter: MoviesPresenterProtocol {
     // Call for interactor to start loading data
     func viewDidLoad() {
         interactor.getMovies()
-      }
+    }
     // Call from interactor to prepare data for UI
     func getMoviesFromInteractor() {
         view?.getMoviesFromPresenter(viewModel: moviesCollection)

@@ -8,17 +8,17 @@
 import SnapKit
 
 class CurrentMovieViewController: UIViewController {
- 
+    
     // UI setup
     let movieTitle: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 35, weight: .medium)
         return label
     }()
     let movieImage: UIImageView = {
-       let view = UIImageView()
+        let view = UIImageView()
         view.clipsToBounds = true
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 10
