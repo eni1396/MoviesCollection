@@ -9,7 +9,6 @@ import SnapKit
 import SDWebImage
 
 protocol ViewProtocol: AnyObject {
-    
     func getMoviesFromPresenter(viewModel: [Result])
 }
 
@@ -24,7 +23,14 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         collection.register(MoviesCell.self, forCellWithReuseIdentifier: Constants.cellID)
         return collection
     }()
+    private lazy var refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+        rc.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        return rc
+    }()
     private let layout = UICollectionViewFlowLayout()
+    
     private var viewModel = [Result]()
     
     init(presenter: MoviesPresenterProtocol) {
@@ -40,20 +46,26 @@ final class MoviesViewController: UIViewController, ViewProtocol {
         super.viewDidLoad()
         collection.delegate = self
         collection.dataSource = self
+        collection.refreshControl = refreshControl
         view.addSubview(collection)
         navigationItem.title = Constants.appTitle
-        // view is ready to receive data from network
+        
+        // View is ready to receive data from network
         presenter.viewDidLoad()
     }
     
     // Method to refresh view after interactor has loaded new data
     func getMoviesFromPresenter(viewModel: [Result]) {
-        DispatchQueue.global().async {
-            self.viewModel = viewModel
-        }
+        self.viewModel = viewModel
         DispatchQueue.main.async {
             self.collection.reloadData()
+            self.refreshControl.endRefreshing()
         }
+    }
+    //Refresh collection in case of an error
+    @objc private func refreshData(_ sender: UIRefreshControl) {
+        presenter.viewDidLoad()
+        refreshControl.endRefreshing()
     }
 }
 
@@ -64,11 +76,11 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     //Passing data to MoviesCell via SDImageView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collection.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as! MoviesCell
+        guard let cell = collection.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as? MoviesCell else { return UICollectionViewCell() }
         cell.configureView(with: self.viewModel, at: indexPath)
         return cell
     }
-    
+    //Open vc on cell tap
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.openVC(with: navigationController!, viewModel: viewModel, indexPath: indexPath)
     }
@@ -85,7 +97,6 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
 extension MoviesViewController: UICollectionViewDelegateFlowLayout {
     
     // Methods to setup CollectionView
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.estimatedItemSize = .zero
@@ -109,5 +120,4 @@ extension MoviesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 20
     }
-    
 }

@@ -51,7 +51,6 @@ class MoviesCell: UICollectionViewCell {
         
         imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
         imageView.sd_imageIndicator = SDWebImageActivityIndicator.large
-        //imageView.sd_setImage(with: url, completed: nil)
         imageView.sd_setImage(with: url, placeholderImage: UIImage(systemName: "film.fill"), options: .fromCacheOnly, progress: nil, completed: nil)
         textLabel.text = viewModel[indexPath.row].title
     }

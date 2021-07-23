@@ -40,5 +40,4 @@ private enum CodingKeys: String, CodingKey {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
-
 }

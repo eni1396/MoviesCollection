@@ -7,10 +7,8 @@
 import Foundation
 
 protocol MoviesInteractorProtocol {
-    
     func getMovies()
 }
-
 
 final class MoviesInteractor: MoviesInteractorProtocol {
     
@@ -27,9 +25,13 @@ final class MoviesInteractor: MoviesInteractorProtocol {
             guard let self = self else { return }
             self.presenter?.moviesCollection += result.results
             self.presenter?.getMoviesFromInteractor()
-            if self.pageCounter <= 500 {
+            if self.pageCounter <= 500 { //больше 500 страниц не получится подгрузить
                 self.pageCounter += 1
             }
+        } errorHandler: { [weak self] error in
+            guard let self = self else { return }
+            self.presenter?.showError()
+            self.presenter?.isLoading = true
         }
     }
 }

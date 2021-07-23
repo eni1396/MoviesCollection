@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct DetailVC_Constants {
+struct DetailVcConstants {
     static let topInset: CGFloat = 100
     static let sideInset: CGFloat = 15
     static let verticalInset: CGFloat = 20

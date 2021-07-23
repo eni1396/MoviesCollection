@@ -60,29 +60,29 @@ class CurrentMovieViewController: UIViewController {
         }
         
         movieRating.snp.makeConstraints { maker in
-            maker.top.equalToSuperview().inset(DetailVC_Constants.topInset)
-            maker.trailing.equalToSuperview().offset(-DetailVC_Constants.sideInset)
-            maker.height.equalTo(DetailVC_Constants.height)
-            maker.width.equalTo(DetailVC_Constants.width)
+            maker.top.equalToSuperview().inset(DetailVcConstants.topInset)
+            maker.trailing.equalToSuperview().offset(-DetailVcConstants.sideInset)
+            maker.height.equalTo(DetailVcConstants.height)
+            maker.width.equalTo(DetailVcConstants.width)
         }
         
         movieImage.snp.makeConstraints { maker in
-            maker.leading.equalToSuperview().inset(DetailVC_Constants.sideInset)
-            maker.trailing.equalToSuperview().offset(-DetailVC_Constants.sideInset)
-            maker.top.equalTo(movieRating.snp.bottom).offset(DetailVC_Constants.verticalInset)
+            maker.leading.equalToSuperview().inset(DetailVcConstants.sideInset)
+            maker.trailing.equalToSuperview().offset(-DetailVcConstants.sideInset)
+            maker.top.equalTo(movieRating.snp.bottom).offset(DetailVcConstants.verticalInset)
             maker.height.equalToSuperview().multipliedBy(0.3)
         }
         
         movieTitle.snp.makeConstraints { maker in
             maker.centerX.equalToSuperview()
-            maker.top.equalTo(movieImage.snp.bottom).offset(DetailVC_Constants.titleInset)
-            maker.leading.equalToSuperview().inset(DetailVC_Constants.sideInset)
+            maker.top.equalTo(movieImage.snp.bottom).offset(DetailVcConstants.titleInset)
+            maker.leading.equalToSuperview().inset(DetailVcConstants.sideInset)
         }
         
         movieDesc.snp.makeConstraints { maker in
-            maker.leading.equalToSuperview().inset(DetailVC_Constants.sideInset)
-            maker.trailing.equalToSuperview().offset(-DetailVC_Constants.sideInset)
-            maker.top.equalTo(movieTitle.snp.bottom).inset(-DetailVC_Constants.verticalInset)
+            maker.leading.equalToSuperview().inset(DetailVcConstants.sideInset)
+            maker.trailing.equalToSuperview().offset(-DetailVcConstants.sideInset)
+            maker.top.equalTo(movieTitle.snp.bottom).inset(-DetailVcConstants.verticalInset)
         }
     }
 }
